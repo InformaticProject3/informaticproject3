@@ -192,7 +192,152 @@ p{
 .footer p{
   color: aquamarine;
 }
-p.xp,
+p#xp,
 .point{
   color: aquamarine;
+}
+.task-item { display: flex; justify-content: space-between; align-items: center; padding: 10px; border: 1px solid #ddd; margin-bottom: 5px; border-radius: 5px; }
+.difficulty{
+  background-color: #6a67ce;
+  color: aquamarine;
+
+}
+.difficulty-selector{
+  display: inline;
+  flex-direction: row;
+}
+#addNewTaskBtn{
+  background-color: black;
+  display: flex;
+  float: right;
+}
+
+.modal-content{
+  background-color: black;
+}
+.modal-title{
+  color: aquamarine; 
+}
+.form-check-label{
+  color: aquamarine;
+}
+.form-label{
+  color: yellow;
+}
+.avatar-section{
+  align-items: center;
+}
+#saveTaskBtn{
+  background-color: yellow;
+  color: black;
+}
+#closeTaskBtn{
+  background-color: gray;
+  color: white;
+}
+#taskId{
+  background-color: black;
+  color: white;
+}
+#taskList>button{
+  background-color: black;
+}
+.xp{
+  color: aquamarine;
+}
+
+*{
+  font-family: "KoHo", serif;
+}
+#owned-badges{
+  color: black;
+}
+/* Кнопка Complete */
+.complete-btn {
+  background-color: green ; /* Зеленый цвет */
+  color: white; 
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+
+/* Кнопка Completed */
+.completed-btn {
+  background-color: gray !important; /* Серый цвет */
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: default;
+}
+
+/* Кнопка Delete */
+.delete-btn {
+  background-color: red ; /* Красный цвет */
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+
+.task-item>button{
+  background-color: red;
+}
+.task-item>button:hover{
+  background-color: green;
+}
+
+
+.avatar-container {
+  position: absolute;
+  top: 10px;
+  right: 10px; /* Переносим в правый верхний угол */
+  display: flex;
+  align-items: center;
+}
+
+.avatar-container img {
+  display: block;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid #fff;
+  transition: transform 0.2s ease-in-out;
+}
+
+.avatar-container img:hover {
+  transform: scale(1.1);
+}
+
+#avatarModal .modal-content {
+  text-align: center;
+}
+
+#avatarImgPreview {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  border: 3px solid #333;
+  margin-bottom: 10px;
+}
+
+.modal-title{
+  text-align: center;
+}
+#level,
+#xp,
+#h2{
+  color: aquamarine;
+}
+#id{
+  color: aquamarine;
+}
+i{
+  padding-left: 5px;
+  padding-right: 5px;
 }

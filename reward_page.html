@@ -11,6 +11,7 @@
     <link rel="icon" type="image/png" sizes="16x16" href="file/logo_transparent.png">
     <link rel="manifest" href="file/HatchfulExport-All (4).zip">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=KoHo">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
 </head>
 <body>
 
@@ -29,9 +30,12 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                     <div class="navbar-nav">
-                        <a class="nav-link" href="home.html">Home</a>
-                        <a class="nav-link" href="leaderboard.html">Leaderboard</a>
-                        <a class="nav-link active" href="reward_page.html">Reward Page</a>
+                        <a class="nav-link" aria-current="page" href="index.html"><i class="bi bi-house-door-fill" style="font-size: 2rem;"></i></a>
+                        <a class="nav-link" href="leaderboard.html"><i class="bi bi-trophy-fill" style="font-size: 2rem;"></i></a>
+                        <a class="nav-link active" href="reward_page.html"><i class="bi bi-box-seam" style="font-size: 2rem;"></i></a>
+                        <div class="avatar-container">
+                            <img id="avatarImg" src="file/I love Fubuki__ Image.gif" alt="avatar" data-bs-toggle="modal" data-bs-target="#avatarModal">
+                        </div>  
                     </div>
                 </div>
             </div>
@@ -61,100 +65,188 @@
         <small>© 2025 Play&Achieve</small>
     </footer>
 
+    <div class="modal fade" id="avatarModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Your Profile</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <img id="avatarImgPreview" src="file/I love Fubuki__ Image.gif" alt="Avatar Preview">
+              <h2 id="h2">Level <span id="level">1</span></h2>
+              <p id="id"><span id="xp">0</span> XP</p>
+              <input type="file" id="avatarInput" accept="image/*">
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
     <script>
 
-        document.addEventListener("DOMContentLoaded", () => {
-            let userXP = parseInt(localStorage.getItem("userXP")) || 0;
-            let ownedBadges = JSON.parse(localStorage.getItem("ownedBadges")) || [];
+document.addEventListener("DOMContentLoaded", () => {
+    let userXP = parseInt(localStorage.getItem("userXP")) || 0;
+    let ownedBadges = JSON.parse(localStorage.getItem("ownedBadges")) || [];
 
+    document.getElementById("user-xp").textContent = userXP;
+
+    // Уровень игрока
+    const level = Math.floor(userXP / 100) + 1;
+    document.getElementById("level").textContent = level;
+
+    const tasks = [
+        { id: 1, name: "Complete a daily goal", points: 50 },
+        { id: 2, name: "Exercise for 30 minutes", points: 75 },
+        { id: 3, name: "Read for 20 minutes", points: 60 },
+        { id: 4, name: "Complete a project milestone", points: 100 },
+        { id: 5, name: "Help a friend with homework", points: 80 },
+        { id: 6, name: "Meditate for 10 minutes", points: 40 }
+    ];
+
+    const rewards = [
+        { id: 1, name: "Bronze Badge", description: "Earned for 100 XP", points: 100 },
+        { id: 2, name: "Silver Badge", description: "Earned for 250 XP", points: 250 },
+        { id: 3, name: "Gold Badge", description: "Earned for 500 XP", points: 500 }
+    ];
+
+    const taskList = document.getElementById("task-list");
+    const rewardContainer = document.getElementById("reward-container");
+    const ownedBadgesList = document.getElementById("owned-badges");
+
+    function updateProfile() {
+        // Обновляем XP и уровень в модальном окне
+        document.getElementById("xp").textContent = userXP;
+        const level = Math.floor(userXP / 100) + 1;
+        document.getElementById("level").textContent = level;
+    }
+
+    function renderTasks() {
+        taskList.innerHTML = "";
+        tasks.forEach(task => {
+            const taskItem = document.createElement("li");
+            taskItem.classList.add("list-group-item", "d-flex", "justify-content-between", "align-items-center");
+            taskItem.innerHTML = `
+                ${task.name} 
+                <button class="btn btn-success btn-sm" onclick="completeTask(${task.id}, ${task.points})">Complete</button>
+            `;
+            taskList.appendChild(taskItem);
+        });
+    }
+
+    function renderRewards() {
+        rewardContainer.innerHTML = "";
+        rewards.forEach(reward => {
+            const rewardCard = document.createElement("div");
+            rewardCard.classList.add("col-md-4");
+            rewardCard.innerHTML = `
+                <div class="card text-center p-3">
+                    <h3>${reward.name}</h3>
+                    <p>${reward.description}</p>
+                    <span class="badge bg-success">${reward.points} XP</span>
+                    <button class="btn btn-primary mt-2" onclick="claimReward(${reward.id}, '${reward.name}', ${reward.points})">Claim</button>
+                </div>
+            `;
+            rewardContainer.appendChild(rewardCard);
+        });
+    }
+
+    function renderOwnedBadges() {
+        ownedBadgesList.innerHTML = "";
+        ownedBadges.forEach(badge => {
+            const badgeItem = document.createElement("li");
+            badgeItem.classList.add("list-group-item", "text-center");
+            badgeItem.textContent = badge;
+            ownedBadgesList.appendChild(badgeItem);
+        });
+    }
+
+    window.completeTask = (taskId, taskPoints) => {
+        userXP += taskPoints;
+        localStorage.setItem("userXP", userXP);
+
+        // Обновляем XP на странице
+        document.getElementById("user-xp").textContent = userXP;
+        
+        // Обновляем уровень
+        const level = Math.floor(userXP / 100) + 1;
+        document.getElementById("level").textContent = level;
+        
+        // Обновляем XP и уровень в модальном окне
+        updateProfile();
+
+        alert("Task completed! You earned " + taskPoints + " XP.");
+    };
+
+    window.claimReward = (rewardId, rewardName, rewardPoints) => {
+        if (userXP >= rewardPoints) {
+            userXP -= rewardPoints;
+            localStorage.setItem("userXP", userXP);
             document.getElementById("user-xp").textContent = userXP;
 
-            const tasks = [
-                { id: 1, name: "Complete a daily goal", points: 50 },
-                { id: 2, name: "Exercise for 30 minutes", points: 75 },
-                { id: 3, name: "Read for 20 minutes", points: 60 },
-                { id: 4, name: "Complete a project milestone", points: 100 },
-                { id: 5, name: "Help a friend with homework", points: 80 },
-                { id: 6, name: "Meditate for 10 minutes", points: 40 }
-            ];
-            
-            const rewards = [
-                { id: 1, name: "Bronze Badge", description: "Earned for 100 XP", points: 100 },
-                { id: 2, name: "Silver Badge", description: "Earned for 250 XP", points: 250 },
-                { id: 3, name: "Gold Badge", description: "Earned for 500 XP", points: 500 }
-            ];
+            // Обновляем уровень и XP в модальном окне
+            updateProfile();
 
-            const taskList = document.getElementById("task-list");
-            const rewardContainer = document.getElementById("reward-container");
-            const ownedBadgesList = document.getElementById("owned-badges");
-
-            function renderTasks() {
-                taskList.innerHTML = "";
-                tasks.forEach(task => {
-                    const taskItem = document.createElement("li");
-                    taskItem.classList.add("list-group-item", "d-flex", "justify-content-between", "align-items-center");
-                    taskItem.innerHTML = `
-                        ${task.name} 
-                        <button class="btn btn-success btn-sm" onclick="completeTask(${task.id}, ${task.points})">Complete</button>
-                    `;
-                    taskList.appendChild(taskItem);
-                });
-            }
-
-            function renderRewards() {
-                rewardContainer.innerHTML = "";
-                rewards.forEach(reward => {
-                    const rewardCard = document.createElement("div");
-                    rewardCard.classList.add("col-md-4");
-                    rewardCard.innerHTML = `
-                        <div class="card text-center p-3">
-                            <h3>${reward.name}</h3>
-                            <p>${reward.description}</p>
-                            <span class="badge bg-success">${reward.points} XP</span>
-                            <button class="btn btn-primary mt-2" onclick="claimReward(${reward.id}, '${reward.name}', ${reward.points})">Claim</button>
-                        </div>
-                    `;
-                    rewardContainer.appendChild(rewardCard);
-                });
-            }
-
-            function renderOwnedBadges() {
-                ownedBadgesList.innerHTML = "";
-                ownedBadges.forEach(badge => {
-                    const badgeItem = document.createElement("li");
-                    badgeItem.classList.add("list-group-item", "text-center");
-                    badgeItem.textContent = badge;
-                    ownedBadgesList.appendChild(badgeItem);
-                });
-            }
-
-            window.completeTask = (taskId, taskPoints) => {
-                userXP += taskPoints;
-                localStorage.setItem("userXP", userXP);
-                document.getElementById("user-xp").textContent = userXP;
-                alert("Task completed! You earned " + taskPoints + " XP.");
-            };
-
-            window.claimReward = (rewardId, rewardName, rewardPoints) => {
-                if (userXP >= rewardPoints) {
-                    userXP -= rewardPoints;
-                    localStorage.setItem("userXP", userXP);
-                    document.getElementById("user-xp").textContent = userXP;
-
-                    ownedBadges.push(rewardName);
-                    localStorage.setItem("ownedBadges", JSON.stringify(ownedBadges));
-                    renderOwnedBadges();
-
-                    alert("You have claimed the reward!");
-                } else {
-                    alert("Not enough XP to claim this reward!");
-                }
-            };
-
-            renderTasks();
-            renderRewards();
+            ownedBadges.push(rewardName);
+            localStorage.setItem("ownedBadges", JSON.stringify(ownedBadges));
             renderOwnedBadges();
-        });
+
+            alert("You have claimed the reward!");
+        } else {
+            alert("Not enough XP to claim this reward!");
+        }
+    };
+
+    renderTasks();
+    renderRewards();
+    renderOwnedBadges();
+
+    const avatarInput = document.getElementById("avatarInput");
+    const avatarImgPreview = document.getElementById("avatarImgPreview");
+    const savedAvatar = localStorage.getItem("avatar");
+    if (savedAvatar) {
+        avatarImg.src = savedAvatar;
+        avatarImgPreview.src = savedAvatar;
+    }
+
+    // Handling avatar change
+    avatarInput.addEventListener("change", (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                avatarImg.src = e.target.result;
+                avatarImgPreview.src = e.target.result;
+                localStorage.setItem("avatar", e.target.result);
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // Update profile when the page loads
+    updateProfile();
+
+    // При открытии модалки с профилем (аватарка кликнута)
+document.getElementById("avatarImg").addEventListener("click", function() {
+    // Получаем данные из localStorage
+    let level = localStorage.getItem("level") ? parseInt(localStorage.getItem("level")) : 1;
+    let xp = localStorage.getItem("xp") ? parseInt(localStorage.getItem("xp")) : 0;
+    
+    // Обновляем данные в модалке
+    document.getElementById("level").textContent = level;
+    document.getElementById("xp").textContent = xp;
+});
+
+// Остальная логика уже есть у тебя для работы с аватаркой, XP и уровнями
+
+});
+
+
+        
+
+        
 
         
 

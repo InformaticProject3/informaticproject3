@@ -11,6 +11,9 @@
   <link rel="icon" type="image/png" sizes="32x32" href="file/logo.png">
   <link rel="icon" type="image/png" sizes="16x16" href="file/logo_transparent.png">
   <link rel="manifest" href="file/HatchfulExport-All (4).zip">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=KoHo">
+
 </head>
 
 <body>
@@ -25,9 +28,12 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
           <div class="navbar-nav">
-            <a class="nav-link" aria-current="page" href="home.html ">Home</a>
-            <a class="nav-link active" href="leaderboard.html">Leaderboard</a>
-            <a class="nav-link" href="reward_page.html">Reward Page</a>
+            <a class="nav-link" aria-current="page" href="index.html"><i class="bi bi-house-door-fill" style="font-size: 2rem;"></i></a>
+            <a class="nav-link active" href="leaderboard.html"><i class="bi bi-trophy-fill" style="font-size: 2rem;"></i></a>
+            <a class="nav-link" href="reward_page.html"><i class="bi bi-box-seam" style="font-size: 2rem;"></i></a>
+            <div class="avatar-container">
+              <img id="avatarImg" src="file/I love Fubuki__ Image.gif" alt="avatar" data-bs-toggle="modal" data-bs-target="#avatarModal">
+            </div>  
           </div>
         </div>
       </div>
@@ -76,6 +82,26 @@
     <p>“Success is the sum of small efforts, repeated daily.”</p>
     <small>© 2025 Play&Achieve</small>
   </footer>
+
+  <div class="modal fade" id="avatarModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Your Profile</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <img id="avatarImgPreview" src="file/I love Fubuki__ Image.gif" alt="Avatar Preview">
+          <h2 id="h2">Level <span id="level">1</span></h2>
+          <p id="id"><span id="xp">0</span> XP</p>
+          <input type="file" id="avatarInput" accept="image/*">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <script>
     document.addEventListener("DOMContentLoaded", function () {
@@ -137,6 +163,91 @@
         leaderboardElement.appendChild(row);
       });
     }
+
+    document.addEventListener("DOMContentLoaded", () => {
+    let userXP = parseInt(localStorage.getItem("userXP")) || 0;
+    let level = parseInt(localStorage.getItem("level")) || 1;
+
+    // Function to update the level and XP based on the current values in localStorage
+    function updateProfile() {
+        document.getElementById("xp").textContent = userXP;
+        document.getElementById("level").textContent = level;
+    }
+
+    // Triggering the avatar modal
+    const avatarImg = document.getElementById("avatarImg");
+    avatarImg.addEventListener("click", () => {
+        // Update the modal with the current XP and level
+        updateProfile();
+    });
+
+    // Task completion function (this will update the XP)
+    window.completeTask = (taskId, taskPoints) => {
+        userXP += taskPoints;
+        localStorage.setItem("userXP", userXP);
+        alert("Task completed! You earned " + taskPoints + " XP.");
+        // Optionally, update the XP in the main page immediately
+        document.getElementById("user-xp").textContent = userXP;
+    };
+
+    // Function to claim rewards (this will also update the XP and level)
+    window.claimReward = (rewardId, rewardName, rewardPoints) => {
+        if (userXP >= rewardPoints) {
+            userXP -= rewardPoints;
+            localStorage.setItem("userXP", userXP);
+            alert("You have claimed the reward!");
+            // Optionally, update the XP in the main page immediately
+            document.getElementById("user-xp").textContent = userXP;
+        } else {
+            alert("Not enough XP to claim this reward!");
+        }
+    };
+
+    // Loading avatar image from localStorage if available
+    const avatarInput = document.getElementById("avatarInput");
+    const avatarImgPreview = document.getElementById("avatarImgPreview");
+    const savedAvatar = localStorage.getItem("avatar");
+    if (savedAvatar) {
+        avatarImg.src = savedAvatar;
+        avatarImgPreview.src = savedAvatar;
+    }
+
+    // Handling avatar change
+    avatarInput.addEventListener("change", (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                avatarImg.src = e.target.result;
+                avatarImgPreview.src = e.target.result;
+                localStorage.setItem("avatar", e.target.result);
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // Update profile when the page loads
+    updateProfile();
+
+    // При открытии модалки с профилем (аватарка кликнута)
+document.getElementById("avatarImg").addEventListener("click", function() {
+    // Получаем данные из localStorage
+    let level = localStorage.getItem("level") ? parseInt(localStorage.getItem("level")) : 1;
+    let xp = localStorage.getItem("xp") ? parseInt(localStorage.getItem("xp")) : 0;
+    
+    // Обновляем данные в модалке
+    document.getElementById("level").textContent = level;
+    document.getElementById("xp").textContent = xp;
+});
+
+// Остальная логика уже есть у тебя для работы с аватаркой, XP и уровнями
+
+
+
+});
+
+
+    
   </script>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
