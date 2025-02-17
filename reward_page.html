@@ -93,7 +93,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.getElementById("user-xp").textContent = userXP;
 
-    // Уровень игрока
+
     const level = Math.floor(userXP / 100) + 1;
     document.getElementById("level").textContent = level;
 
@@ -117,7 +117,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const ownedBadgesList = document.getElementById("owned-badges");
 
     function updateProfile() {
-        // Обновляем XP и уровень в модальном окне
+    
         document.getElementById("xp").textContent = userXP;
         const level = Math.floor(userXP / 100) + 1;
         document.getElementById("level").textContent = level;
@@ -167,14 +167,14 @@ document.addEventListener("DOMContentLoaded", () => {
         userXP += taskPoints;
         localStorage.setItem("userXP", userXP);
 
-        // Обновляем XP на странице
+ 
         document.getElementById("user-xp").textContent = userXP;
         
-        // Обновляем уровень
+  
         const level = Math.floor(userXP / 100) + 1;
         document.getElementById("level").textContent = level;
         
-        // Обновляем XP и уровень в модальном окне
+
         updateProfile();
 
         alert("Task completed! You earned " + taskPoints + " XP.");
@@ -186,7 +186,7 @@ document.addEventListener("DOMContentLoaded", () => {
             localStorage.setItem("userXP", userXP);
             document.getElementById("user-xp").textContent = userXP;
 
-            // Обновляем уровень и XP в модальном окне
+      
             updateProfile();
 
             ownedBadges.push(rewardName);
@@ -211,7 +211,6 @@ document.addEventListener("DOMContentLoaded", () => {
         avatarImgPreview.src = savedAvatar;
     }
 
-    // Handling avatar change
     avatarInput.addEventListener("change", (event) => {
         const file = event.target.files[0];
         if (file) {
@@ -225,21 +224,20 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // Update profile when the page loads
+
     updateProfile();
 
-    // При открытии модалки с профилем (аватарка кликнута)
 document.getElementById("avatarImg").addEventListener("click", function() {
-    // Получаем данные из localStorage
+   
     let level = localStorage.getItem("level") ? parseInt(localStorage.getItem("level")) : 1;
     let xp = localStorage.getItem("xp") ? parseInt(localStorage.getItem("xp")) : 0;
     
-    // Обновляем данные в модалке
+
     document.getElementById("level").textContent = level;
     document.getElementById("xp").textContent = xp;
 });
 
-// Остальная логика уже есть у тебя для работы с аватаркой, XP и уровнями
+
 
 });
 

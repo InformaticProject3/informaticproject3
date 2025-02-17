@@ -19,7 +19,7 @@ body {
   color: #333;
 }
 
-/* Header */
+
 .header {
   display: flex;
   justify-content: space-between;
@@ -43,13 +43,13 @@ body {
   font-size: 16px;
 }
 
-/* Main Content */
+
 .main {
   padding: 40px;
   text-align: center;
 }
 
-/* Avatar Section */
+
 .avatar {
   margin: 20px auto;
 }
@@ -71,7 +71,7 @@ body {
   font-size: 18px;
 }
 
-/* Tasks Section */
+
 .tasks-section {
   margin-top: 30px;
   background: #fff;
@@ -115,7 +115,6 @@ body {
   background-color: #5c5abd;
 }
 
-/* Footer */
 .footer {
   margin-top: 40px;
   padding: 20px;
@@ -210,6 +209,7 @@ p#xp,
   background-color: black;
   display: flex;
   float: right;
+  border-color: aquamarine;
 }
 
 .modal-content{
@@ -252,9 +252,9 @@ p#xp,
 #owned-badges{
   color: black;
 }
-/* Кнопка Complete */
+
 .complete-btn {
-  background-color: green ; /* Зеленый цвет */
+  background-color: green ; 
   color: white; 
   border: none;
   padding: 5px 10px;
@@ -263,9 +263,9 @@ p#xp,
 }
 
 
-/* Кнопка Completed */
+
 .completed-btn {
-  background-color: gray !important; /* Серый цвет */
+  background-color: gray !important;
   color: white;
   border: none;
   padding: 5px 10px;
@@ -273,9 +273,8 @@ p#xp,
   cursor: default;
 }
 
-/* Кнопка Delete */
 .delete-btn {
-  background-color: red ; /* Красный цвет */
+  background-color: red ;
   color: white;
   border: none;
   padding: 5px 10px;
@@ -295,7 +294,7 @@ p#xp,
 .avatar-container {
   position: absolute;
   top: 10px;
-  right: 10px; /* Переносим в правый верхний угол */
+  right: 10px;
   display: flex;
   align-items: center;
 }

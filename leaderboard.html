@@ -168,42 +168,42 @@
     let userXP = parseInt(localStorage.getItem("userXP")) || 0;
     let level = parseInt(localStorage.getItem("level")) || 1;
 
-    // Function to update the level and XP based on the current values in localStorage
+
     function updateProfile() {
         document.getElementById("xp").textContent = userXP;
         document.getElementById("level").textContent = level;
     }
 
-    // Triggering the avatar modal
+
     const avatarImg = document.getElementById("avatarImg");
     avatarImg.addEventListener("click", () => {
-        // Update the modal with the current XP and level
+  
         updateProfile();
     });
 
-    // Task completion function (this will update the XP)
+
     window.completeTask = (taskId, taskPoints) => {
         userXP += taskPoints;
         localStorage.setItem("userXP", userXP);
         alert("Task completed! You earned " + taskPoints + " XP.");
-        // Optionally, update the XP in the main page immediately
+
         document.getElementById("user-xp").textContent = userXP;
     };
 
-    // Function to claim rewards (this will also update the XP and level)
+
     window.claimReward = (rewardId, rewardName, rewardPoints) => {
         if (userXP >= rewardPoints) {
             userXP -= rewardPoints;
             localStorage.setItem("userXP", userXP);
             alert("You have claimed the reward!");
-            // Optionally, update the XP in the main page immediately
+
             document.getElementById("user-xp").textContent = userXP;
         } else {
             alert("Not enough XP to claim this reward!");
         }
     };
 
-    // Loading avatar image from localStorage if available
+
     const avatarInput = document.getElementById("avatarInput");
     const avatarImgPreview = document.getElementById("avatarImgPreview");
     const savedAvatar = localStorage.getItem("avatar");
@@ -212,7 +212,7 @@
         avatarImgPreview.src = savedAvatar;
     }
 
-    // Handling avatar change
+
     avatarInput.addEventListener("change", (event) => {
         const file = event.target.files[0];
         if (file) {
@@ -226,21 +226,19 @@
         }
     });
 
-    // Update profile when the page loads
+
     updateProfile();
 
-    // При открытии модалки с профилем (аватарка кликнута)
+
 document.getElementById("avatarImg").addEventListener("click", function() {
-    // Получаем данные из localStorage
+
     let level = localStorage.getItem("level") ? parseInt(localStorage.getItem("level")) : 1;
     let xp = localStorage.getItem("xp") ? parseInt(localStorage.getItem("xp")) : 0;
-    
-    // Обновляем данные в модалке
+
     document.getElementById("level").textContent = level;
     document.getElementById("xp").textContent = xp;
 });
 
-// Остальная логика уже есть у тебя для работы с аватаркой, XP и уровнями
 
 
 
