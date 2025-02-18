@@ -343,7 +343,7 @@ i{
 small{
     color: aquamarine;
 }
-#owned-badges li{
+#owned-badges > li{
   color: black !important;
 }
 #claim-btn{
