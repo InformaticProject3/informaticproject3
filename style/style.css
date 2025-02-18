@@ -1,3 +1,4 @@
+
 a{
     text-decoration: none;
     color: yellow;
@@ -340,10 +341,11 @@ i{
   padding-left: 5px;
   padding-right: 5px;
 }
+
 small{
-    color: aquamarine;
+  color: aquamarine;
 }
-#owned-badges > li{
+#owned-badges li{
   color: black !important;
 }
 #claim-btn{
