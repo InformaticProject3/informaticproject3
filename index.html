@@ -52,16 +52,7 @@
   </header>
 
   <main class="main">
-    <!-- <section class="avatar-section">
-      <div class="avatar">
-        <img id="avatarImg" src="file/I love Fubuki__ Image.gif" class="avatar img" alt="avatar">
-      </div>
-      <input type="file" id="avatarInput" accept="image/*">
-      <div class="level">
-        <h2>Level <span id="level">1</span></h2>
-        <p class="point"><span id="xp">0</span> XP</p>
-      </div>
-    </section> -->
+
 
     <section class="tasks-section">
       <button id="addNewTaskBtn" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#taskModal">
@@ -152,6 +143,22 @@
     </div>
   </div>
 
+  <div class="modal fade" id="subtaskModal" tabindex="-1" aria-labelledby="subtaskModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="subtaskModalLabel">Manage Subtasks</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <ul id="subtaskList"></ul>
+          <input type="text" id="newSubtask" placeholder="Add a subtask" class="form-control mb-2">
+          <button class="btn btn-primary" onclick="addSubtask()">Add Subtask</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
 
   <script>
     let level = localStorage.getItem("level") ? parseInt(localStorage.getItem("level")) : 1;
@@ -159,7 +166,6 @@
     const xpThreshold = 1000;
     let completedTasks = JSON.parse(localStorage.getItem("completedTasks")) || {};
     let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
-
 
     function updateLevel() {
       while (xp >= xpThreshold) {
@@ -171,7 +177,6 @@
       localStorage.setItem("level", level);
       localStorage.setItem("xp", xp);
     }
-
 
     function completeTask(button, taskId, points) {
       xp += points;
@@ -186,7 +191,11 @@
       localStorage.setItem("completedTasks", JSON.stringify(completedTasks));
     }
 
-    // Add new task
+    function saveTasks() {
+      console.log('Saving tasks:', tasks);
+      localStorage.setItem('tasks', JSON.stringify(tasks));
+    }
+
     function addTask(taskName, description, difficulty) {
       let points = 0;
 
@@ -206,24 +215,23 @@
       }
 
       const taskList = document.getElementById("taskList");
-      const taskId = "task" + Date.now(); // Unique ID for task
+      const taskId = "task" + Date.now();
       const newTaskItem = document.createElement("li");
       newTaskItem.classList.add("task-item");
       newTaskItem.innerHTML = `
         <span onclick="showTaskDescription('${description}')"><strong>${taskName}</strong> (${difficulty})</span>
         <button id="${taskId}" class="complete-btn" onclick="completeTask(this, '${taskId}', ${points})">Complete</button>
         <button class="delete-btn" onclick="deleteTask('${taskId}')">Delete</button>
-        `;
+        <button class="subtask-btn" onclick="openSubtaskModal('${taskId}')">Subtasks</button>
+      `;
 
       taskList.appendChild(newTaskItem);
 
-  
       tasks.push({ id: taskId, name: taskName, points: points, difficulty: difficulty, description: description });
-      localStorage.setItem("tasks", JSON.stringify(tasks));
+      saveTasks();
 
       updateLevel();
     }
-
 
     document.getElementById("saveTaskBtn").addEventListener("click", () => {
       const taskName = document.getElementById("taskType").value;
@@ -235,109 +243,21 @@
         document.getElementById("taskType").value = "";
         document.getElementById("taskDescription").value = "";
         document.querySelector('input[name="difficulty"]:checked').checked = false;
-        $('#taskModal').modal('hide');  // Close the modal
+        $('#taskModal').modal('hide');
       } else {
         alert("Please fill out all fields correctly.");
       }
     });
 
- 
     function deleteTask(taskId) {
       tasks = tasks.filter(t => t.id !== taskId);
-      localStorage.setItem("tasks", JSON.stringify(tasks));
+      saveTasks();
       document.getElementById(taskId).parentElement.remove();
     }
 
-    document.addEventListener("DOMContentLoaded", () => {
-  loadTasks(); 
-});
-
-  
-    document.addEventListener("DOMContentLoaded", () => {
-      updateLevel();
-      loadTasks();
-
-
-
-      tasks.forEach(task => {
-        const taskList = document.getElementById("taskList");
-        const newTaskItem = document.createElement("li");
-        newTaskItem.classList.add("task-item");
-        newTaskItem.innerHTML = `
-          <span><strong>${task.name}</strong> (${task.difficulty}) - ${task.description}</span>
-          <button id="${task.id}" class="complete-btn" onclick="completeTask(this, '${task.id}', ${task.points})">Complete</button>
-          <button class="delete-btn" onclick="deleteTask('${task.id}')">Delete</button>
-        `;
-        taskList.appendChild(newTaskItem);
-
-  
-        if (completedTasks[task.id]) {
-          const button = document.getElementById(task.id);
-          if (button) {
-
-            button.disabled = true;
-            button.textContent = "✅ Completed";
-            button.classList.remove("complete-btn");
-            button.classList.add("completed-btn");
-          }
-
-          completedTasks[taskId] = true;
-          localStorage.setItem("completedTasks", JSON.stringify(completedTasks));
-        }
-      });
-    });
-
-
-
-    document.addEventListener("DOMContentLoaded", () => {
-      const avatarInput = document.getElementById("avatarInput");
-      const avatarImg = document.getElementById("avatarImg");
-      const avatarImgPreview = document.getElementById("avatarImgPreview");
-      const saveAvatarBtn = document.getElementById("saveAvatarBtn");
-
-
-      const savedAvatar = localStorage.getItem("avatar");
-      if (savedAvatar) {
-        avatarImg.src = savedAvatar;
-        avatarImgPreview.src = savedAvatar;
-      }
-
-      avatarInput.addEventListener("change", (event) => {
-        const file = event.target.files[0];
-        if (file) {
-          const reader = new FileReader();
-          reader.onload = function (e) {
-            avatarImg.src = e.target.result;
-            avatarImgPreview.src = e.target.result;
-            localStorage.setItem("avatar", e.target.result);
-          };
-          reader.readAsDataURL(file);
-        }
-      });
-
-      saveAvatarBtn.addEventListener("click", () => {
-        localStorage.setItem("avatar", avatarImg.src);
-        alert("Avatar saved successfully!");
-      });
-    });
-
-    document.addEventListener("DOMContentLoaded", () => {
-      const today = new Date().toDateString();
-      const lastReset = localStorage.getItem("lastResetDate");
-
-      if (lastReset !== today) {
-        // localStorage.setItem("tasks", JSON.stringify([]));
-        localStorage.setItem("completedTasks", JSON.stringify({}));
-        localStorage.setItem("lastResetDate", today);
-      }
-
-      updateLevel();
-      loadTasks();
-    });
-
     function loadTasks() {
-      const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
-      const completedTasks = JSON.parse(localStorage.getItem("completedTasks")) || {};
+      tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+      completedTasks = JSON.parse(localStorage.getItem("completedTasks")) || {};
       const taskList = document.getElementById("taskList");
       taskList.innerHTML = "";
 
@@ -347,19 +267,19 @@
         taskDescriptionModal.show();
       }
 
-
-
       tasks.forEach(task => {
         const newTaskItem = document.createElement("li");
         newTaskItem.classList.add("task-item");
         newTaskItem.innerHTML = `
-       <span onclick="showTaskDescription('${task.description}')"><strong>${task.name}</strong> (${task.difficulty})</span>
-      <button id="${task.id}" class="complete-btn" onclick="completeTask(this, '${task.id}', ${task.points})">Complete</button>
-      <button class="delete-btn" onclick="deleteTask('${task.id}')">Delete</button>
-    `;
+          <span onclick="showTaskDescription('${task.description}')"><strong>${task.name}</strong> (${task.difficulty})</span>
+          <button id="${task.id}" class="complete-btn" onclick="completeTask(this, '${task.id}', ${task.points})">Complete</button>
+          <button class="delete-btn" onclick="deleteTask('${task.id}')">Delete</button>
+          <button class="subtask-btn" onclick="openSubtaskModal('${task.id}')">Subtasks</button>
+        `;
+
         taskList.appendChild(newTaskItem);
 
-        if (completedTasks[task.id]) {
+        if (completedTasks.hasOwnProperty(task.id)) {
           const button = document.getElementById(task.id);
           if (button) {
             button.disabled = true;
@@ -371,9 +291,59 @@
       });
     }
 
+    let subtasks = JSON.parse(localStorage.getItem('subtasks')) || {};
 
+    function openSubtaskModal(taskId) {
+      document.getElementById('subtaskModal').setAttribute('data-task-id', taskId);
+      loadSubtasks(taskId);
+      let subtaskModal = new bootstrap.Modal(document.getElementById('subtaskModal'));
+      subtaskModal.show();
+    }
 
+    function loadSubtasks(taskId) {
+      const subtaskList = document.getElementById('subtaskList');
+      subtaskList.innerHTML = '';
 
+      if (!subtasks[taskId]) subtasks[taskId] = [];
+
+      subtasks[taskId].forEach((subtask, index) => {
+        const li = document.createElement('li');
+        li.innerHTML = `
+          <input type="checkbox" onchange="toggleSubtask('${taskId}', ${index})" ${subtask.completed ? 'checked' : ''}>
+          ${subtask.text}
+          <button class="btn btn-danger btn-sm" onclick="deleteSubtask('${taskId}', ${index})">Delete</button>
+        `;
+        subtaskList.appendChild(li);
+      });
+    }
+
+    function addSubtask() {
+      const taskId = document.getElementById('subtaskModal').getAttribute('data-task-id');
+      const newSubtaskInput = document.getElementById('newSubtask');
+
+      if (newSubtaskInput.value.trim() !== '') {
+        subtasks[taskId].push({ text: newSubtaskInput.value.trim(), completed: false });
+        localStorage.setItem('subtasks', JSON.stringify(subtasks));
+        newSubtaskInput.value = '';
+        loadSubtasks(taskId);
+      }
+    }
+
+    function toggleSubtask(taskId, index) {
+      subtasks[taskId][index].completed = !subtasks[taskId][index].completed;
+      localStorage.setItem('subtasks', JSON.stringify(subtasks));
+    }
+
+    function deleteSubtask(taskId, index) {
+      subtasks[taskId].splice(index, 1);
+      localStorage.setItem('subtasks', JSON.stringify(subtasks));
+      loadSubtasks(taskId);
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      updateLevel();
+      loadTasks();
+    });
 
   </script>
 

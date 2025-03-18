@@ -351,3 +351,7 @@ small{
 #claim-btn{
   background-color: green;  
 }
+
+ul#subtaskList{
+  color: aquamarine;
+}
